@@ -6,22 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('pengukuran', function (Blueprint $table) {
+        Schema::create('pengukurans', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('balita_id')->constrained('balitas')->cascadeOnDelete();
+            $table->foreignId('kegiatan_id')->nullable()->constrained('kegiatans')->nullOnDelete();
+            $table->date('tanggal_ukur');
+            $table->integer('umur_saat_ukur');
+            $table->decimal('berat_badan', 5, 2);
+            $table->decimal('tinggi_badan', 5, 2);
+            $table->decimal('lingkar_kepala', 5, 2);
+            $table->enum('status_gizi', ['normal', 'kurang', 'buruk', 'lebih'])->default('normal');
+            $table->text('catatan')->nullable();
+            $table->foreignId('kader_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
+            
+            $table->index('balita_id');
+            $table->index('tanggal_ukur');
+            $table->index('status_gizi');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('pengukuran');
+        Schema::dropIfExists('pengukurans');
     }
 };

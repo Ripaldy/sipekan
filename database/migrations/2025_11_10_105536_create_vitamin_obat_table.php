@@ -6,22 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('vitamin_obat', function (Blueprint $table) {
+        Schema::create('vitamin_obats', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('balita_id')->constrained('balitas')->cascadeOnDelete();
+            $table->enum('jenis', ['vitamin_a', 'obat_cacing']);
+            $table->date('tanggal_pemberian');
+            $table->string('dosis', 50);
+            $table->foreignId('kader_id')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
+            
+            $table->index('balita_id');
+            $table->index('jenis');
+            $table->index('tanggal_pemberian');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('vitamin_obat');
+        Schema::dropIfExists('vitamin_obats');
     }
 };
