@@ -8,13 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Kegiatan extends Model
 {
     protected $fillable = [
+        'posyandu',
         'nama_kegiatan',
         'tanggal',
         'waktu_mulai',
         'waktu_selesai',
         'lokasi',
         'kategori_kegiatan',
+        'status',
         'deskripsi',
+        'pemateri',
+        'target_peserta',
     ];
 
     protected $casts = [

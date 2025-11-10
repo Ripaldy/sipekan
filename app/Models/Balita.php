@@ -17,11 +17,10 @@ class Balita extends Model
         'nama',
         'jenis_kelamin',
         'tanggal_lahir',
-        'nik_balita',
         'nama_orang_tua',
-        'nik_orang_tua',
         'alamat',
-        'rt_rw',
+        'desa_kelurahan',
+        'posyandu',
         'no_telepon_ortu',
         'foto_balita',
     ];
@@ -31,6 +30,43 @@ class Balita extends Model
     ];
 
     protected $appends = ['umur_sekarang'];
+
+    // Boot method untuk auto-generate id_balita
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($balita) {
+            if (empty($balita->id_balita)) {
+                $balita->id_balita = static::generateIdBalita();
+            }
+        });
+    }
+
+    /**
+     * Generate ID Balita dengan format: BSY-YYYYMMDD-XXX
+     */
+    public static function generateIdBalita(): string
+    {
+        $today = now()->format('Ymd');
+        $prefix = "BSY-{$today}-";
+        
+        // Cari balita terakhir dengan prefix hari ini
+        $lastBalita = static::withTrashed()
+            ->where('id_balita', 'like', $prefix . '%')
+            ->orderBy('id_balita', 'desc')
+            ->first();
+        
+        if ($lastBalita) {
+            // Extract nomor urut terakhir
+            $lastNumber = (int) substr($lastBalita->id_balita, -3);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+        
+        return $prefix . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+    }
 
     // Relationships
     public function pengukurans(): HasMany
@@ -69,7 +105,7 @@ class Balita extends Model
 
     public function getFotoUrlAttribute(): ?string
     {
-        return $this->foto_balita ? Storage::disk('public')->url($this->foto_balita) : null;
+        return $this->foto_balita ? asset('storage/' . $this->foto_balita) : null;
     }
 
     // Helpers
