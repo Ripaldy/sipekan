@@ -6,6 +6,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TimePicker;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -42,18 +43,32 @@ class KegiatanForm
                     ->icon('heroicon-o-calendar')
                     ->schema([
                         DatePicker::make('tanggal')
-                            ->label('Jadwal Kegiatan')
+                            ->label('Tanggal Kegiatan')
                             ->required()
                             ->native(false)
                             ->displayFormat('d/m/Y')
                             ->placeholder('mm/dd/yyyy')
+                            ->columnSpan(2),
+                        
+                        TimePicker::make('waktu_mulai')
+                            ->label('Waktu Mulai')
+                            ->native(false)
+                            ->seconds(false)
+                            ->placeholder('HH:MM')
+                            ->columnSpan(1),
+                        
+                        TimePicker::make('waktu_selesai')
+                            ->label('Waktu Selesai')
+                            ->native(false)
+                            ->seconds(false)
+                            ->placeholder('HH:MM')
                             ->columnSpan(1),
                         
                         TextInput::make('posyandu')
                             ->label('Posyandu')
                             ->placeholder('Contoh: Posyandu Anggrek')
                             ->maxLength(100)
-                            ->columnSpan(1),
+                            ->columnSpan(2),
                         
                         TextInput::make('lokasi')
                             ->label('Lokasi')

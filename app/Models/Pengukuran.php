@@ -64,30 +64,43 @@ class Pengukuran extends Model
 
     public static function calculateStatusGizi($beratBadan, $tinggiBadan, $umurBulan): string
     {
-        // Simplified BMI calculation for children
+        // WHO standard BB/TB (Weight-for-Height) Z-score calculation
+        // Simplified calculation using BMI-for-age as proxy
         $tinggiBadanMeter = $tinggiBadan / 100;
         $bmi = $beratBadan / ($tinggiBadanMeter * $tinggiBadanMeter);
 
+        // WHO reference values approximation for Indonesian children
+        // These are simplified - in production, use actual WHO tables
         if ($umurBulan < 24) {
-            if ($bmi < 14) return 'buruk';
-            if ($bmi < 16) return 'kurang';
-            if ($bmi < 18) return 'normal';
-            return 'lebih';
+            $median = 16.5;
+            $sd = 1.5;
+        } elseif ($umurBulan < 60) {
+            $median = 15.5;
+            $sd = 1.4;
         } else {
-            if ($bmi < 13) return 'buruk';
-            if ($bmi < 15) return 'kurang';
-            if ($bmi < 17) return 'normal';
-            return 'lebih';
+            $median = 15.0;
+            $sd = 1.6;
         }
+
+        // Calculate Z-score
+        $zScore = ($bmi - $median) / $sd;
+
+        // WHO categories based on Z-score
+        if ($zScore < -3) return 'gizi_buruk';      // Severely wasted (< -3 SD)
+        if ($zScore < -2) return 'kurus';           // Wasted (-3 to -2 SD)
+        if ($zScore <= 2) return 'normal';          // Normal (-2 to +2 SD)
+        if ($zScore <= 3) return 'gemuk';           // Overweight (+2 to +3 SD)
+        return 'obesitas';                          // Obese (> +3 SD)
     }
 
     public function getStatusGiziColorAttribute(): string
     {
         return match($this->status_gizi) {
             'normal' => 'success',
-            'kurang' => 'warning',
-            'buruk' => 'danger',
-            'lebih' => 'info',
+            'kurus' => 'warning',
+            'gizi_buruk' => 'danger',
+            'gemuk' => 'info',
+            'obesitas' => 'primary',
             default => 'gray',
         };
     }

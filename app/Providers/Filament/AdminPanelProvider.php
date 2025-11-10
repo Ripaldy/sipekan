@@ -38,8 +38,11 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
-                AccountWidget::class,
-                FilamentInfoWidget::class,
+                \App\Filament\Widgets\StatsOverview::class,
+                \App\Filament\Widgets\TrenBalitaChart::class,
+                \App\Filament\Widgets\BalitaStatusGiziChart::class,
+                \App\Filament\Widgets\PertumbuhanAnakChart::class,
+                \App\Filament\Widgets\KegiatanRecentTable::class,
             ])
             ->middleware([
                 EncryptCookies::class,
