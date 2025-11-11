@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BalitaController;
-// use App\Http\Controllers\Api\KegiatanController;
+use App\Http\Controllers\Api\PublicBalitaController;
+use App\Http\Controllers\Api\KegiatanController;
 // use App\Http\Controllers\Api\PengukuranController;
 // use App\Http\Controllers\Api\ImunisasiController;
 // use App\Http\Controllers\Api\VitaminObatController;
@@ -16,6 +17,19 @@ use Illuminate\Support\Facades\Route;
 | API Routes - Posyandu System
 |--------------------------------------------------------------------------
 */
+
+// ===== PUBLIC ROUTES (No Authentication) =====
+Route::prefix('public')->group(function () {
+    // Search balita by code (for parents/public)
+    Route::get('/balita/search', [PublicBalitaController::class, 'searchByCode']);
+    
+    // Get statistics for home page
+    Route::get('/statistics', [PublicBalitaController::class, 'getStatistics']);
+    
+    // Get public kegiatan list
+    Route::get('/kegiatan', [KegiatanController::class, 'index']);
+    Route::get('/kegiatan/{id}', [KegiatanController::class, 'show']);
+});
 
 // Authentication Routes (Public)
 Route::prefix('auth')->group(function () {
@@ -43,16 +57,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/{id}', [BalitaController::class, 'destroy']);
     });
 
-    // TODO: Uncomment setelah controller dibuat di phase selanjutnya
+    // Kegiatan Routes (Admin protected)
+    Route::prefix('kegiatan')->group(function () {
+        Route::get('/', [KegiatanController::class, 'index']);
+        Route::get('/{id}', [KegiatanController::class, 'show']);
+        Route::post('/', [KegiatanController::class, 'store']);
+        Route::put('/{id}', [KegiatanController::class, 'update']);
+        Route::delete('/{id}', [KegiatanController::class, 'destroy']);
+    });
     
-    // // Kegiatan Routes
-    // Route::prefix('kegiatan')->group(function () {
-    //     Route::get('/', [KegiatanController::class, 'index']);
-    //     Route::get('/{id}', [KegiatanController::class, 'show']);
-    //     Route::post('/', [KegiatanController::class, 'store']);
-    //     Route::put('/{id}', [KegiatanController::class, 'update']);
-    //     Route::delete('/{id}', [KegiatanController::class, 'destroy']);
-    // });
+    // TODO: Uncomment setelah controller dibuat di phase selanjutnya
 
     // // Pengukuran Routes
     // Route::prefix('pengukuran')->group(function () {

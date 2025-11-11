@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Serve React Frontend - catch all routes except /api
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '^(?!api).*$');
