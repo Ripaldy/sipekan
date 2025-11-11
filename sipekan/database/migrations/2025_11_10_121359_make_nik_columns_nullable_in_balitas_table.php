@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('balitas', function (Blueprint $table) {
+            // Make NIK columns nullable for security reasons
+            $table->string('nik_balita', 16)->nullable()->change();
+            $table->string('nik_orang_tua', 16)->nullable()->change();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('balitas', function (Blueprint $table) {
+            // Revert back to required
+            $table->string('nik_balita', 16)->nullable(false)->change();
+            $table->string('nik_orang_tua', 16)->nullable(false)->change();
+        });
+    }
+};
