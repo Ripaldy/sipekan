@@ -1,0 +1,364 @@
+/* ============================================
+   FILAMENT DASHBOARD CUSTOM STYLING
+   Mengikuti color palette dan layout React Admin
+   ============================================ */
+
+:root {
+  /* React Color Palette */
+  --color-primary-blue: #3498db;
+  --color-success-green: #27ae60;
+  --color-warning-yellow: #f1c40f;
+  --color-danger-purple: #9b59b6;
+  --color-red: #e74c3c;
+  
+  /* Neutral Colors */
+  --color-surface: #ffffff;
+  --color-border: #e0e0e0;
+  --color-text-dark: #2c3e50;
+  --color-text-light: #7f8c8d;
+  
+  /* Shadows */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   STATS OVERVIEW CARDS - MAIN STYLING
+   ============================================ */
+
+/* Container untuk stats cards */
+.filament-statsOverview-widget {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+  padding: 0;
+}
+
+/* Individual stat card */
+.filament-statsOverview-stat {
+  background-color: var(--color-surface);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  border-left: 5px solid;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.filament-statsOverview-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Stat label/title */
+.filament-statsOverview-stat .filament-statsOverview-stat-label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* Stat value/number */
+.filament-statsOverview-stat .filament-statsOverview-stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: auto;
+  padding-bottom: 12px;
+}
+
+/* Stat description */
+.filament-statsOverview-stat .filament-statsOverview-stat-description {
+  font-size: 0.85rem;
+  color: var(--color-text-light);
+  border-top: 1px solid var(--color-border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+
+/* Icon styling */
+.filament-statsOverview-stat [class*="heroicon"] {
+  width: 24px;
+  height: 24px;
+  opacity: 0.7;
+  margin-right: 8px;
+}
+
+/* ============================================
+   COLOR VARIANTS FOR STATS CARDS
+   ============================================ */
+
+/* Anak Terdaftar - Blue */
+.filament-statsOverview-stat.stat-info {
+  border-left-color: var(--color-primary-blue);
+}
+
+.filament-statsOverview-stat.stat-info .filament-statsOverview-stat-value {
+  color: var(--color-primary-blue);
+}
+
+.filament-statsOverview-stat.stat-info [class*="heroicon"] {
+  color: var(--color-primary-blue);
+}
+
+/* Total Kegiatan - Yellow */
+.filament-statsOverview-stat.stat-warning {
+  border-left-color: var(--color-warning-yellow);
+}
+
+.filament-statsOverview-stat.stat-warning .filament-statsOverview-stat-value {
+  color: var(--color-warning-yellow);
+}
+
+.filament-statsOverview-stat.stat-warning [class*="heroicon"] {
+  color: var(--color-warning-yellow);
+}
+
+/* Gejala Stunting - Red/Purple */
+.filament-statsOverview-stat.stat-danger {
+  border-left-color: var(--color-red);
+}
+
+.filament-statsOverview-stat.stat-danger .filament-statsOverview-stat-value {
+  color: var(--color-red);
+}
+
+.filament-statsOverview-stat.stat-danger [class*="heroicon"] {
+  color: var(--color-red);
+}
+
+/* Anak Normal - Green */
+.filament-statsOverview-stat.stat-success {
+  border-left-color: var(--color-success-green);
+}
+
+.filament-statsOverview-stat.stat-success .filament-statsOverview-stat-value {
+  color: var(--color-success-green);
+}
+
+.filament-statsOverview-stat.stat-success [class*="heroicon"] {
+  color: var(--color-success-green);
+}
+
+/* ============================================
+   CHARTS CONTAINER STYLING
+   ============================================ */
+
+/* Charts grid layout */
+.filament-widgets-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+/* Individual chart widget */
+.filament-widget {
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  padding: 24px;
+  transition: box-shadow 0.3s ease;
+}
+
+.filament-widget:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+/* Chart title */
+.filament-widget-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Chart canvas */
+.filament-widget canvas {
+  max-height: 350px;
+}
+
+/* ============================================
+   DASHBOARD MAIN CONTAINER
+   ============================================ */
+
+.filament-dashboard-content {
+  background-color: #f8f9fa;
+  padding: 24px;
+  border-radius: 12px;
+}
+
+/* Dashboard header */
+.filament-dashboard-header {
+  margin-bottom: 32px;
+}
+
+.filament-dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-text-dark);
+  margin-bottom: 8px;
+}
+
+.filament-dashboard-header p {
+  font-size: 1rem;
+  color: var(--color-text-light);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .filament-widgets-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .filament-statsOverview-widget {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+  }
+
+  .filament-statsOverview-stat {
+    padding: 16px;
+  }
+
+  .filament-statsOverview-stat .filament-statsOverview-stat-label {
+    font-size: 0.85rem;
+  }
+
+  .filament-statsOverview-stat .filament-statsOverview-stat-value {
+    font-size: 1.75rem;
+  }
+
+  .filament-widget {
+    padding: 16px;
+  }
+
+  .filament-widget-heading {
+    font-size: 1.1rem;
+  }
+
+  .filament-widget canvas {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filament-statsOverview-widget {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .filament-statsOverview-stat {
+    padding: 12px;
+  }
+
+  .filament-statsOverview-stat .filament-statsOverview-stat-value {
+    font-size: 1.5rem;
+  }
+
+  .filament-widget {
+    padding: 12px;
+  }
+}
+
+/* ============================================
+   LEGEND STYLING (untuk Pie/Doughnut charts)
+   ============================================ */
+
+.filament-widget .chartjs-legend {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.filament-widget .chartjs-legend ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filament-widget .chartjs-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--color-text-dark);
+}
+
+.filament-widget .chartjs-legend span {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+/* ============================================
+   ANIMATION
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filament-statsOverview-stat {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.filament-widget {
+  animation: fadeInUp 0.4s ease-out;
+  animation-delay: 0.1s;
+}
+
+/* ============================================
+   TAILWIND UTILITY CLASS OVERRIDES
+   ============================================ */
+
+/* Ensure Filament color classes use our palette */
+.text-info {
+  color: var(--color-primary-blue) !important;
+}
+
+.text-warning {
+  color: var(--color-warning-yellow) !important;
+}
+
+.text-danger {
+  color: var(--color-red) !important;
+}
+
+.text-success {
+  color: var(--color-success-green) !important;
+}
+
+.bg-info-50 {
+  background-color: rgba(52, 152, 219, 0.05) !important;
+}
+
+.bg-warning-50 {
+  background-color: rgba(241, 196, 15, 0.05) !important;
+}
+
+.bg-danger-50 {
+  background-color: rgba(231, 76, 60, 0.05) !important;
+}
+
+.bg-success-50 {
+  background-color: rgba(39, 174, 96, 0.05) !important;
+}
