@@ -91,54 +91,54 @@
 
 /* Anak Terdaftar - Blue */
 .filament-statsOverview-stat.stat-info {
-    border-left-color: var(--color-primary-blue);
+    border-left-color: var(--color-primary-blue) !important;
 }
 
 .filament-statsOverview-stat.stat-info .filament-statsOverview-stat-value {
-    color: var(--color-primary-blue);
+    color: var(--color-primary-blue) !important;
 }
 
 .filament-statsOverview-stat.stat-info [class*="heroicon"] {
-    color: var(--color-primary-blue);
+    color: var(--color-primary-blue) !important;
 }
 
 /* Total Kegiatan - Yellow */
 .filament-statsOverview-stat.stat-warning {
-    border-left-color: var(--color-warning-yellow);
+    border-left-color: var(--color-warning-yellow) !important;
 }
 
 .filament-statsOverview-stat.stat-warning .filament-statsOverview-stat-value {
-    color: var(--color-warning-yellow);
+    color: var(--color-warning-yellow) !important;
 }
 
 .filament-statsOverview-stat.stat-warning [class*="heroicon"] {
-    color: var(--color-warning-yellow);
+    color: var(--color-warning-yellow) !important;
 }
 
 /* Gejala Stunting - Red/Purple */
 .filament-statsOverview-stat.stat-danger {
-    border-left-color: var(--color-red);
+    border-left-color: var(--color-red) !important;
 }
 
 .filament-statsOverview-stat.stat-danger .filament-statsOverview-stat-value {
-    color: var(--color-red);
+    color: var(--color-red) !important;
 }
 
 .filament-statsOverview-stat.stat-danger [class*="heroicon"] {
-    color: var(--color-red);
+    color: var(--color-red) !important;
 }
 
 /* Anak Normal - Green */
 .filament-statsOverview-stat.stat-success {
-    border-left-color: var(--color-success-green);
+    border-left-color: var(--color-success-green) !important;
 }
 
 .filament-statsOverview-stat.stat-success .filament-statsOverview-stat-value {
-    color: var(--color-success-green);
+    color: var(--color-success-green) !important;
 }
 
 .filament-statsOverview-stat.stat-success [class*="heroicon"] {
-    color: var(--color-success-green);
+    color: var(--color-success-green) !important;
 }
 
 /* ============================================
@@ -361,4 +361,125 @@
 
 .bg-success-50 {
     background-color: rgba(39, 174, 96, 0.05) !important;
+}
+
+/* ============================================
+   ADDITIONAL TAILWIND COLOR OVERRIDES
+   ============================================ */
+
+/* Info/Blue colors */
+.text-blue-600,
+.text-info-600 {
+    color: var(--color-primary-blue) !important;
+}
+
+.border-blue-200,
+.border-info-200 {
+    border-color: var(--color-primary-blue) !important;
+}
+
+/* Warning/Yellow colors */
+.text-yellow-600,
+.text-warning-600 {
+    color: var(--color-warning-yellow) !important;
+}
+
+.border-yellow-200,
+.border-warning-200 {
+    border-color: var(--color-warning-yellow) !important;
+}
+
+/* Danger/Red colors */
+.text-red-600,
+.text-danger-600 {
+    color: var(--color-red) !important;
+}
+
+.border-red-200,
+.border-danger-200 {
+    border-color: var(--color-red) !important;
+}
+
+/* Success/Green colors */
+.text-green-600,
+.text-success-600 {
+    color: var(--color-success-green) !important;
+}
+
+.border-green-200,
+.border-success-200 {
+    border-color: var(--color-success-green) !important;
+}
+
+/* ============================================
+   ADDITIONAL STAT OVERRIDES FOR FILAMENT COLORS
+   ============================================ */
+
+/* Direct stat info customization - Blue */
+.stat-info,
+[data-stat-color="info"] {
+    border-left-color: #3498db !important;
+}
+
+.stat-info h3,
+.stat-info .font-mono,
+[data-stat-color="info"] h3,
+[data-stat-color="info"] .font-mono {
+    color: #3498db !important;
+}
+
+/* Direct stat warning customization - Yellow */
+.stat-warning,
+[data-stat-color="warning"] {
+    border-left-color: #f1c40f !important;
+}
+
+.stat-warning h3,
+.stat-warning .font-mono,
+[data-stat-color="warning"] h3,
+[data-stat-color="warning"] .font-mono {
+    color: #f1c40f !important;
+}
+
+/* Direct stat danger customization - Red */
+.stat-danger,
+[data-stat-color="danger"] {
+    border-left-color: #e74c3c !important;
+}
+
+.stat-danger h3,
+.stat-danger .font-mono,
+[data-stat-color="danger"] h3,
+[data-stat-color="danger"] .font-mono {
+    color: #e74c3c !important;
+}
+
+/* Direct stat success customization - Green */
+.stat-success,
+[data-stat-color="success"] {
+    border-left-color: #27ae60 !important;
+}
+
+.stat-success h3,
+.stat-success .font-mono,
+[data-stat-color="success"] h3,
+[data-stat-color="success"] .font-mono {
+    color: #27ae60 !important;
+}
+
+/* Override all possible text color classes in stats */
+.stat-info [class*="text-"], .stat-info [class*="text-"]::after {
+    color: #3498db !important;
+}
+
+.stat-warning [class*="text-"], .stat-warning [class*="text-"]::after {
+    color: #f1c40f !important;
+}
+
+.stat-danger [class*="text-"], .stat-danger [class*="text-"]::after {
+    color: #e74c3c !important;
+}
+
+.stat-success [class*="text-"], .stat-success [class*="text-"]::after {
+    color: #27ae60 !important;
 }
