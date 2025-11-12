@@ -97,7 +97,7 @@ class KegiatanController extends Controller
             'kategori_kegiatan' => 'required|in:imunisasi,penimbangan,penyuluhan,posyandu',
             'pemateri' => 'nullable|string|max:100',
             'target_peserta' => 'nullable|string|max:100',
-            'status' => 'nullable|in:terjadwal,selesai,dibatalkan',
+            'status' => 'nullable|in:terjadwal,sedang berlangsung,selesai,dibatalkan',
         ]);
 
         if ($validator->fails()) {
@@ -141,7 +141,7 @@ class KegiatanController extends Controller
             'kategori_kegiatan' => 'in:imunisasi,penimbangan,penyuluhan,posyandu',
             'pemateri' => 'nullable|string|max:100',
             'target_peserta' => 'nullable|string|max:100',
-            'status' => 'nullable|in:terjadwal,selesai,dibatalkan',
+            'status' => 'nullable|in:terjadwal,sedang berlangsung,selesai,dibatalkan',
         ]);
 
         if ($validator->fails()) {

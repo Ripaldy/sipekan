@@ -87,7 +87,7 @@ const Kegiatan = () => {
     setLoading(true);
     setError(null);
     try {
-      const result = await publicService.getKegiatan({ only_future: true });
+      const result = await publicService.getKegiatan();
       if (result.success && result.data) {
         setKegiatanData(result.data);
       } else {
@@ -95,9 +95,11 @@ const Kegiatan = () => {
         setKegiatanData(defaultKegiatan);
       }
     } catch (err) {
-      console.error('Error fetching kegiatan:', err);
+      console.error("Error fetching kegiatan:", err);
       setKegiatanData(defaultKegiatan);
-      setError('Menggunakan data contoh karena tidak dapat terhubung ke server');
+      setError(
+        "Menggunakan data contoh karena tidak dapat terhubung ke server"
+      );
     } finally {
       setLoading(false);
     }
@@ -110,9 +112,17 @@ const Kegiatan = () => {
   };
 
   const filteredKegiatan = useMemo(() => {
-    const dataToFilter = kegiatanData.length > 0 ? kegiatanData : defaultKegiatan;
-    
+    const dataToFilter =
+      kegiatanData.length > 0 ? kegiatanData : defaultKegiatan;
+
     return dataToFilter.filter((kegiatan) => {
+      // Filter by status - only show 'terjadwal' and 'sedang berlangsung'
+      const status = kegiatan.status || "";
+      const statusMatch =
+        status === "terjadwal" || status === "sedang berlangsung";
+
+      if (!statusMatch) return false;
+
       // Handle different date field names from API vs default data
       const kegiatanDateStr = kegiatan.tanggal || kegiatan.jadwal;
       const filterDate = tanggalFilter ? new Date(tanggalFilter) : null;
@@ -125,13 +135,14 @@ const Kegiatan = () => {
           kegiatanDate.getDate() === filterDate.getDate());
 
       const cariLower = cariFilter.toLowerCase();
-      
+
       // Handle different field names from API
-      const judul = kegiatan.nama_kegiatan || kegiatan.judul || '';
-      const deskripsi = kegiatan.deskripsi || '';
-      const tempat = kegiatan.lokasi || kegiatan.posyandu || kegiatan.tempat || '';
-      const pemateri = kegiatan.pemateri || kegiatan.penanggung_jawab || '';
-      
+      const judul = kegiatan.nama_kegiatan || kegiatan.judul || "";
+      const deskripsi = kegiatan.deskripsi || "";
+      const tempat =
+        kegiatan.lokasi || kegiatan.posyandu || kegiatan.tempat || "";
+      const pemateri = kegiatan.pemateri || kegiatan.penanggung_jawab || "";
+
       const cariMatch =
         !cariFilter ||
         judul.toLowerCase().includes(cariLower) ||
@@ -141,38 +152,57 @@ const Kegiatan = () => {
 
       // Support both kategori_kegiatan (API) and kategori (default data)
       const kategori = kegiatan.kategori_kegiatan || kegiatan.kategori;
-      const kategoriMatch =
-        !kategoriFilter || kategori === kategoriFilter;
+      const kategoriMatch = !kategoriFilter || kategori === kategoriFilter;
 
-      return tanggalMatch && cariMatch && kategoriMatch;
+      return statusMatch && tanggalMatch && cariMatch && kategoriMatch;
     });
   }, [tanggalFilter, cariFilter, kategoriFilter, kegiatanData]);
 
   const formatDate = (kegiatan) => {
-    // Handle both API format (tanggal + waktu_mulai) and default format (jadwal)
-    let dateStr = kegiatan.tanggal || kegiatan.jadwal;
-    
-    // If there's separate waktu_mulai field, combine it
-    if (kegiatan.waktu_mulai && kegiatan.tanggal) {
-      dateStr = `${kegiatan.tanggal} ${kegiatan.waktu_mulai}`;
-    } else if (kegiatan.waktu && kegiatan.tanggal) {
-      dateStr = `${kegiatan.tanggal} ${kegiatan.waktu}`;
+    try {
+      // Extract date from ISO format (2025-11-20T00:00:00.000000Z)
+      let tanggalStr = kegiatan.tanggal || kegiatan.jadwal;
+      let waktuStr = kegiatan.waktu_mulai || kegiatan.waktu || "00:00:00";
+
+      // Extract just the date part from ISO string
+      if (tanggalStr && tanggalStr.includes("T")) {
+        tanggalStr = tanggalStr.split("T")[0]; // Get "2025-11-20" from "2025-11-20T00:00:00..."
+      }
+
+      // Parse waktu_mulai if it's in HH:MM:SS format
+      let hours = "00",
+        minutes = "00";
+      if (waktuStr && waktuStr.includes(":")) {
+        const timeParts = waktuStr.split(":");
+        hours = timeParts[0];
+        minutes = timeParts[1];
+      }
+
+      // Create a proper date string for parsing
+      const dateStr = `${tanggalStr}T${hours}:${minutes}:00`;
+      const date = new Date(dateStr);
+
+      if (isNaN(date.getTime())) {
+        return "Invalid Date WIB"; // Fallback if parsing fails
+      }
+
+      return date.toLocaleString("id-ID", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "Asia/Jakarta",
+      });
+    } catch (err) {
+      console.error("Error formatting date:", err);
+      return "Invalid Date WIB";
     }
-    
-    const date = new Date(dateStr);
-    return date.toLocaleString("id-ID", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone: "Asia/Jakarta",
-    });
   };
-  
+
   const getKegiatanField = (kegiatan, apiField, defaultField) => {
-    return kegiatan[apiField] || kegiatan[defaultField] || '';
+    return kegiatan[apiField] || kegiatan[defaultField] || "";
   };
 
   const getCategoryIcon = (category) => {
@@ -262,8 +292,13 @@ const Kegiatan = () => {
 
           <div className="kegiatan-results-info">
             Menampilkan <strong>{filteredKegiatan.length}</strong> dari{" "}
-            <strong>{kegiatanData.length || defaultKegiatan.length}</strong> kegiatan
-            {error && <span style={{ color: '#f59e0b', marginLeft: '10px' }}>⚠️ {error}</span>}
+            <strong>{kegiatanData.length || defaultKegiatan.length}</strong>{" "}
+            kegiatan
+            {error && (
+              <span style={{ color: "#f59e0b", marginLeft: "10px" }}>
+                ⚠️ {error}
+              </span>
+            )}
           </div>
         </div>
 
@@ -276,134 +311,152 @@ const Kegiatan = () => {
         )}
 
         {/* Kegiatan List */}
-        {!loading && <div className="kegiatan-list">
-          {filteredKegiatan.length > 0 ? (
-            filteredKegiatan.map((kegiatan) => {
-              const isExpanded = expandedCard === kegiatan.id;
-              return (
-                <div
-                  key={kegiatan.id}
-                  className={`kegiatan-card ${kegiatan.kategori_kegiatan || kegiatan.kategori} ${
-                    isExpanded ? "expanded" : ""
-                  }`}
-                >
+        {!loading && (
+          <div className="kegiatan-list">
+            {filteredKegiatan.length > 0 ? (
+              filteredKegiatan.map((kegiatan) => {
+                const isExpanded = expandedCard === kegiatan.id;
+                return (
                   <div
-                    className="kegiatan-card-header"
-                    onClick={() =>
-                      setExpandedCard(isExpanded ? null : kegiatan.id)
-                    }
+                    key={kegiatan.id}
+                    className={`kegiatan-card ${
+                      kegiatan.kategori_kegiatan || kegiatan.kategori
+                    } ${isExpanded ? "expanded" : ""}`}
                   >
-                    <div className="kegiatan-card-icon-wrapper">
-                      {getCategoryIcon(kegiatan.kategori_kegiatan || kegiatan.kategori)}
-                    </div>
-
-                    <div className="kegiatan-card-content">
-                      <div className="kegiatan-card-title-row">
-                        <h3 className="kegiatan-card-title">
-                          {kegiatan.nama_kegiatan || kegiatan.judul}
-                        </h3>
-                        <span className="kegiatan-card-badge">
-                          {getCategoryLabel(kegiatan.kategori_kegiatan || kegiatan.kategori)}
-                        </span>
+                    <div
+                      className="kegiatan-card-header"
+                      onClick={() =>
+                        setExpandedCard(isExpanded ? null : kegiatan.id)
+                      }
+                    >
+                      <div className="kegiatan-card-icon-wrapper">
+                        {getCategoryIcon(
+                          kegiatan.kategori_kegiatan || kegiatan.kategori
+                        )}
                       </div>
 
-                      <p className="kegiatan-card-description">
-                        {kegiatan.deskripsi}
-                      </p>
-
-                      <div className="kegiatan-card-quick-info">
-                        <div className="kegiatan-quick-info-item">
-                          <Calendar />
-                          <span className="kegiatan-quick-info-text">
-                            {formatDate(kegiatan)} WIB
+                      <div className="kegiatan-card-content">
+                        <div className="kegiatan-card-title-row">
+                          <h3 className="kegiatan-card-title">
+                            {kegiatan.nama_kegiatan || kegiatan.judul}
+                          </h3>
+                          <span className="kegiatan-card-badge">
+                            {getCategoryLabel(
+                              kegiatan.kategori_kegiatan || kegiatan.kategori
+                            )}
                           </span>
                         </div>
-                        <div className="kegiatan-quick-info-item">
-                          <MapPin />
-                          <span className="kegiatan-quick-info-text">
-                            {kegiatan.lokasi || kegiatan.posyandu || kegiatan.tempat}
-                          </span>
-                        </div>
-                        <div className="kegiatan-quick-info-item">
-                          <Users />
-                          <span className="kegiatan-quick-info-text">
-                            {kegiatan.target_peserta || kegiatan.target}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
 
-                    <ChevronRight className="kegiatan-card-chevron" />
-                  </div>
+                        <p className="kegiatan-card-description">
+                          {kegiatan.deskripsi}
+                        </p>
 
-                  {isExpanded && (
-                    <div className="kegiatan-card-expanded">
-                      <table className="kegiatan-detail-table">
-                        <tbody>
-                          <tr>
-                            <td className="kegiatan-detail-label">
-                              Jadwal Lengkap
-                            </td>
-                            <td className="kegiatan-detail-value">
+                        <div className="kegiatan-card-quick-info">
+                          <div className="kegiatan-quick-info-item">
+                            <Calendar />
+                            <span className="kegiatan-quick-info-text">
                               {formatDate(kegiatan)} WIB
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="kegiatan-detail-label">Lokasi/Tempat</td>
-                            <td className="kegiatan-detail-value">
-                              {kegiatan.tempat || kegiatan.lokasi || kegiatan.posyandu}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="kegiatan-detail-label">
-                              Penanggung Jawab / Pemateri
-                            </td>
-                            <td className="kegiatan-detail-value">
-                              {kegiatan.penanggung_jawab || kegiatan.pemateri || '-'}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="kegiatan-detail-label">
-                              Target Peserta
-                            </td>
-                            <td className="kegiatan-detail-value">
-                              {kegiatan.target_peserta || kegiatan.target || '-'}
-                            </td>
-                          </tr>
-                          {kegiatan.status && (
+                            </span>
+                          </div>
+                          <div className="kegiatan-quick-info-item">
+                            <MapPin />
+                            <span className="kegiatan-quick-info-text">
+                              {kegiatan.lokasi ||
+                                kegiatan.posyandu ||
+                                kegiatan.tempat}
+                            </span>
+                          </div>
+                          <div className="kegiatan-quick-info-item">
+                            <Users />
+                            <span className="kegiatan-quick-info-text">
+                              {kegiatan.target_peserta || kegiatan.target}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <ChevronRight className="kegiatan-card-chevron" />
+                    </div>
+
+                    {isExpanded && (
+                      <div className="kegiatan-card-expanded">
+                        <table className="kegiatan-detail-table">
+                          <tbody>
                             <tr>
-                              <td className="kegiatan-detail-label">Status</td>
+                              <td className="kegiatan-detail-label">
+                                Jadwal Lengkap
+                              </td>
                               <td className="kegiatan-detail-value">
-                                {kegiatan.status}
+                                {formatDate(kegiatan)} WIB
                               </td>
                             </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </div>
-              );
-            })
-          ) : (
-            <div className="kegiatan-empty-state">
-              <div className="kegiatan-empty-icon">🔍</div>
-              <h3 className="kegiatan-empty-title">
-                Tidak ada kegiatan ditemukan
-              </h3>
-              <p className="kegiatan-empty-text">
-                Coba ubah kriteria pencarian atau filter untuk melihat kegiatan
-                lain
-              </p>
-              <button
-                onClick={handleResetFilter}
-                className="kegiatan-empty-btn"
-              >
-                Reset Filter
-              </button>
-            </div>
-          )}
-        </div>}
+                            <tr>
+                              <td className="kegiatan-detail-label">
+                                Lokasi/Tempat
+                              </td>
+                              <td className="kegiatan-detail-value">
+                                {kegiatan.tempat ||
+                                  kegiatan.lokasi ||
+                                  kegiatan.posyandu}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="kegiatan-detail-label">
+                                Penanggung Jawab / Pemateri
+                              </td>
+                              <td className="kegiatan-detail-value">
+                                {kegiatan.penanggung_jawab ||
+                                  kegiatan.pemateri ||
+                                  "-"}
+                              </td>
+                            </tr>
+                            <tr>
+                              <td className="kegiatan-detail-label">
+                                Target Peserta
+                              </td>
+                              <td className="kegiatan-detail-value">
+                                {kegiatan.target_peserta ||
+                                  kegiatan.target ||
+                                  "-"}
+                              </td>
+                            </tr>
+                            {kegiatan.status && (
+                              <tr>
+                                <td className="kegiatan-detail-label">
+                                  Status
+                                </td>
+                                <td className="kegiatan-detail-value">
+                                  {kegiatan.status}
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            ) : (
+              <div className="kegiatan-empty-state">
+                <div className="kegiatan-empty-icon">🔍</div>
+                <h3 className="kegiatan-empty-title">
+                  Tidak ada kegiatan ditemukan
+                </h3>
+                <p className="kegiatan-empty-text">
+                  Coba ubah kriteria pencarian atau filter untuk melihat
+                  kegiatan lain
+                </p>
+                <button
+                  onClick={handleResetFilter}
+                  className="kegiatan-empty-btn"
+                >
+                  Reset Filter
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

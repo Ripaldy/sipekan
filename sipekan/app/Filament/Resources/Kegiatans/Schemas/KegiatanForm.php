@@ -101,6 +101,7 @@ class KegiatanForm
                             ->label('Status')
                             ->options([
                                 'terjadwal' => 'Terjadwal',
+                                'sedang berlangsung' => 'Sedang Berlangsung',
                                 'selesai' => 'Selesai',
                                 'dibatalkan' => 'Dibatalkan',
                             ])
