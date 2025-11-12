@@ -8,8 +8,8 @@
     --color-primary-blue: #3498db;
     --color-success-green: #27ae60;
     --color-warning-yellow: #f1c40f;
+    --color-danger-red: #e74c3c;
     --color-danger-purple: #9b59b6;
-    --color-red: #e74c3c;
 
     /* Neutral Colors */
     --color-surface: #ffffff;
@@ -23,10 +23,68 @@
 }
 
 /* ============================================
-   STATS OVERVIEW CARDS - MAIN STYLING
+   STATS OVERVIEW - ALL TARGETING OPTIONS
    ============================================ */
 
-/* Container untuk stats cards */
+/* Target stat cards with class attribute from extraAttributes */
+.stat-info,
+.stat-warning,
+.stat-danger,
+.stat-success {
+    border-left-width: 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+.stat-info {
+    border-left-color: #3498db !important;
+}
+
+.stat-info::before {
+    background-color: #3498db !important;
+}
+
+.stat-warning {
+    border-left-color: #f1c40f !important;
+}
+
+.stat-warning::before {
+    background-color: #f1c40f !important;
+}
+
+.stat-danger {
+    border-left-color: #e74c3c !important;
+}
+
+.stat-danger::before {
+    background-color: #e74c3c !important;
+}
+
+.stat-success {
+    border-left-color: #27ae60 !important;
+}
+
+.stat-success::before {
+    background-color: #27ae60 !important;
+}
+
+/* Target data attributes */
+[data-color="info"] {
+    border-left-color: #3498db !important;
+}
+
+[data-color="warning"] {
+    border-left-color: #f1c40f !important;
+}
+
+[data-color="danger"] {
+    border-left-color: #e74c3c !important;
+}
+
+[data-color="success"] {
+    border-left-color: #27ae60 !important;
+}
+
+/* Original CSS for container and stats */
 .filament-statsOverview-widget {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -35,7 +93,6 @@
     padding: 0;
 }
 
-/* Individual stat card */
 .filament-statsOverview-stat {
     background-color: var(--color-surface);
     padding: 24px;

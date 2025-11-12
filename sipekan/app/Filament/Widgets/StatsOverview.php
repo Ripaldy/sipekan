@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class StatsOverview extends BaseWidget
 {
-    protected string $view = 'filament.widgets.stats-overview';
-
     protected function getStats(): array
     {
         // Total Anak Terdaftar
@@ -74,16 +72,5 @@ class StatsOverview extends BaseWidget
                 ->chartColor('#27ae60')
                 ->extraAttributes(['class' => 'stat-success']),
         ];
-    }
-
-    protected function getStatColor(string $color): string
-    {
-        return match($color) {
-            'info' => '#3498db',
-            'warning' => '#f1c40f',
-            'danger' => '#e74c3c',
-            'success' => '#27ae60',
-            default => '#6b7280',
-        };
     }
 }
