@@ -468,18 +468,22 @@
 }
 
 /* Override all possible text color classes in stats */
-.stat-info [class*="text-"], .stat-info [class*="text-"]::after {
+.stat-info [class*="text-"],
+.stat-info [class*="text-"]::after {
     color: #3498db !important;
 }
 
-.stat-warning [class*="text-"], .stat-warning [class*="text-"]::after {
+.stat-warning [class*="text-"],
+.stat-warning [class*="text-"]::after {
     color: #f1c40f !important;
 }
 
-.stat-danger [class*="text-"], .stat-danger [class*="text-"]::after {
+.stat-danger [class*="text-"],
+.stat-danger [class*="text-"]::after {
     color: #e74c3c !important;
 }
 
-.stat-success [class*="text-"], .stat-success [class*="text-"]::after {
+.stat-success [class*="text-"],
+.stat-success [class*="text-"]::after {
     color: #27ae60 !important;
 }
