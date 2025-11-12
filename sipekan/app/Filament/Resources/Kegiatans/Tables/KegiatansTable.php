@@ -22,56 +22,63 @@ class KegiatansTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
-                    ->description(fn ($record) => $record->pemateri ? 'Pemateri: ' . $record->pemateri : null),
+                    ->description(fn ($record) => 'Pemateri: ' . ($record->pemateri ?? '-')),
                 
                 TextColumn::make('posyandu')
                     ->label('Posyandu')
                     ->searchable()
-                    ->sortable()
-                    ->toggleable()
-                    ->placeholder('-'),
+                    ->sortable(),
                 
                 BadgeColumn::make('kategori_kegiatan')
                     ->label('Kategori')
                     ->colors([
-                        'success' => 'posyandu',
+                        'success' => 'imunisasi',
                         'warning' => 'penimbangan',
-                        'danger' => 'imunisasi',
-                        'primary' => 'penyuluhan',
+                        'info' => 'penyuluhan',
+                        'primary' => 'posyandu',
                     ])
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match($state) {
+                        'imunisasi' => 'Imunisasi',
+                        'penimbangan' => 'Penimbangan',
+                        'penyuluhan' => 'Penyuluhan',
+                        'posyandu' => 'Posyandu',
+                        default => ucfirst($state),
+                    }),
                 
                 BadgeColumn::make('status')
                     ->label('Status')
                     ->colors([
                         'success' => 'selesai',
                         'warning' => 'terjadwal',
+                        'info' => 'sedang berlangsung',
                         'danger' => 'dibatalkan',
                     ])
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn (string $state): string => match($state) {
+                        'selesai' => 'Selesai',
+                        'terjadwal' => 'Terjadwal',
+                        'sedang berlangsung' => 'Sedang Berlangsung',
+                        'dibatalkan' => 'Dibatalkan',
+                        default => ucfirst($state),
+                    }),
                 
                 TextColumn::make('tanggal')
                     ->label('Tanggal')
-                    ->date('d/m/Y')
+                    ->date('Y-m-d')
                     ->sortable()
                     ->description(fn ($record) => $record->waktu_mulai ? $record->waktu_mulai . ' - ' . $record->waktu_selesai : null),
                 
                 TextColumn::make('lokasi')
                     ->label('Lokasi')
                     ->searchable()
-                    ->toggleable()
                     ->limit(30),
                 
                 TextColumn::make('target_peserta')
                     ->label('Target')
-                    ->suffix(' peserta')
-                    ->toggleable()
-                    ->placeholder('-'),
+                    ->suffix(' peserta'),
                 
                 TextColumn::make('jumlah_peserta')
                     ->label('Realisasi')
-                    ->suffix(' balita')
-                    ->toggleable(),
+                    ->suffix(' balita'),
                 
                 TextColumn::make('created_at')
                     ->label('Dibuat')

@@ -4,3 +4,4 @@
 
 /* Import custom Filament dashboard styling */
 @import "./filament-dashboard-custom.css";
+@import "./filament-admin-styling.css";

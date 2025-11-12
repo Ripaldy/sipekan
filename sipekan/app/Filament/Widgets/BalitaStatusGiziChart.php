@@ -5,6 +5,7 @@ namespace App\Filament\Widgets;
 use App\Models\Pengukuran;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\StatusGiziHelper;
 
 class BalitaStatusGiziChart extends ChartWidget
 {
@@ -22,7 +23,9 @@ class BalitaStatusGiziChart extends ChartWidget
 
     protected function getData(): array
     {
-        // Ambil pengukuran terakhir setiap balita berdasarkan WHO categories
+        // Ambil pengukuran terakhir setiap balita berdasarkan standar baru:
+        // - Stunting: TB/U < -2 SD
+        // - Normal: TB/U >= -2 SD
         $statusGizi = Pengukuran::select('balita_id', 'status_gizi', 'tanggal_ukur')
             ->whereIn('id', function ($query) {
                 $query->select(DB::raw('MAX(id)'))
@@ -33,33 +36,24 @@ class BalitaStatusGiziChart extends ChartWidget
             ->groupBy('status_gizi')
             ->map(fn ($group) => $group->count());
 
-        // WHO 5 categories
-        $giziBuruk = $statusGizi->get('gizi_buruk', 0);
-        $kurus = $statusGizi->get('kurus', 0);
+        // Hitung jumlah Stunting dan Normal berdasarkan standar baru
+        $stunting = $statusGizi->get('stunting', 0);
         $normal = $statusGizi->get('normal', 0);
-        $gemuk = $statusGizi->get('gemuk', 0);
-        $obesitas = $statusGizi->get('obesitas', 0);
 
         return [
             'datasets' => [
                 [
                     'label' => 'Jumlah Anak',
-                    'data' => [$giziBuruk, $kurus, $normal, $gemuk, $obesitas],
+                    'data' => [$stunting, $normal],
                     'backgroundColor' => [
-                        'rgb(220, 38, 38)',    // Red - Gizi Buruk
-                        'rgb(251, 146, 60)',   // Orange - Kurus
-                        'rgb(34, 197, 94)',    // Green - Normal
-                        'rgb(234, 179, 8)',    // Yellow - Gemuk
-                        'rgb(29, 78, 216)',    // Blue - Obesitas
+                        'rgb(231, 76, 60)',    // Red - Stunting (TB/U < -2 SD)
+                        'rgb(39, 174, 96)',    // Green - Normal (TB/U >= -2 SD)
                     ],
                 ],
             ],
             'labels' => [
-                'Gizi Buruk: ' . $giziBuruk . ' anak', 
-                'Kurus: ' . $kurus . ' anak', 
-                'Normal: ' . $normal . ' anak', 
-                'Gemuk: ' . $gemuk . ' anak', 
-                'Obesitas: ' . $obesitas . ' anak'
+                'Stunting (TB/U < -2 SD): ' . $stunting . ' anak', 
+                'Normal (TB/U ≥ -2 SD): ' . $normal . ' anak'
             ],
         ];
     }

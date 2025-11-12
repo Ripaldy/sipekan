@@ -10,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use App\Helpers\StatusGiziHelper;
 
 class BalitaForm
 {
@@ -97,6 +98,38 @@ class BalitaForm
                             ->columnSpan(2),
                     ])
                     ->columns(2),
+                
+                Section::make('Status Gizi Pengukuran Terakhir')
+                    ->description('Berdasarkan standar: Stunting (TB/U < -2 SD), Normal (TB/U ≥ -2 SD)')
+                    ->schema([
+                        Select::make('status_gizi_edit')
+                            ->label('Status Gizi')
+                            ->options(StatusGiziHelper::statusOptions())
+                            ->required()
+                            ->live()
+                            ->afterStateUpdated(function ($state, $record) {
+                                if ($record && StatusGiziHelper::isValidStatus($state)) {
+                                    $lastMeasurement = $record->pengukurans()
+                                        ->orderBy('tanggal_ukur', 'desc')
+                                        ->first();
+                                    
+                                    if ($lastMeasurement) {
+                                        $lastMeasurement->status_gizi = $state;
+                                        $lastMeasurement->save();
+                                    }
+                                }
+                            })
+                            ->default(function ($record) {
+                                if ($record) {
+                                    $lastMeasurement = $record->pengukurans()
+                                        ->orderBy('tanggal_ukur', 'desc')
+                                        ->first();
+                                    return $lastMeasurement ? $lastMeasurement->status_gizi : null;
+                                }
+                                return null;
+                            }),
+                    ])
+                    ->collapsed(true),
             ]);
     }
 }

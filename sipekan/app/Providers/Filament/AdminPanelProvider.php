@@ -29,8 +29,13 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#27ae60'),  // Green - matching screenshot
+                'success' => Color::hex('#27ae60'),
+                'warning' => Color::hex('#f39c12'),
+                'danger' => Color::hex('#e74c3c'),
+                'info' => Color::hex('#3498db'),
             ])
+            ->brandName('Admin SiPekan')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

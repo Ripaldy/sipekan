@@ -64,43 +64,55 @@ class Pengukuran extends Model
 
     public static function calculateStatusGizi($beratBadan, $tinggiBadan, $umurBulan): string
     {
-        // WHO standard BB/TB (Weight-for-Height) Z-score calculation
-        // Simplified calculation using BMI-for-age as proxy
-        $tinggiBadanMeter = $tinggiBadan / 100;
-        $bmi = $beratBadan / ($tinggiBadanMeter * $tinggiBadanMeter);
-
-        // WHO reference values approximation for Indonesian children
-        // These are simplified - in production, use actual WHO tables
-        if ($umurBulan < 24) {
-            $median = 16.5;
-            $sd = 1.5;
-        } elseif ($umurBulan < 60) {
-            $median = 15.5;
-            $sd = 1.4;
-        } else {
-            $median = 15.0;
-            $sd = 1.6;
+        // Standar baru berdasarkan TB/U (Height-for-Age):
+        // - Anak Stunting: TB/U < -2 SD
+        // - Anak Normal: TB/U >= -2 SD
+        
+        // Untuk implementasi, ini menggunakan reference WHO untuk TB/U
+        // Dalam sistem real, gunakan tabel referensi WHO yang lengkap
+        
+        // Placeholder: hitung TB/U score (dalam SD)
+        // Formula: (Actual Height - Median Height) / SD
+        
+        // WHO reference medians untuk TB/U (simplified)
+        $referenceData = [
+            // [age_months => [median, sd], ...]
+            // Contoh nilai - gunakan tabel WHO yang lengkap untuk implementasi real
+            12 => ['median' => 75.3, 'sd' => 3.3],
+            24 => ['median' => 85.3, 'sd' => 3.9],
+            36 => ['median' => 94.6, 'sd' => 4.5],
+            48 => ['median' => 103.2, 'sd' => 5.0],
+            60 => ['median' => 110.3, 'sd' => 5.5],
+        ];
+        
+        // Cari reference terdekat
+        $medianHeight = 75;
+        $sd = 3;
+        
+        foreach ($referenceData as $age => $data) {
+            if ($umurBulan <= $age) {
+                $medianHeight = $data['median'];
+                $sd = $data['sd'];
+                break;
+            }
         }
-
-        // Calculate Z-score
-        $zScore = ($bmi - $median) / $sd;
-
-        // WHO categories based on Z-score
-        if ($zScore < -3) return 'gizi_buruk';      // Severely wasted (< -3 SD)
-        if ($zScore < -2) return 'kurus';           // Wasted (-3 to -2 SD)
-        if ($zScore <= 2) return 'normal';          // Normal (-2 to +2 SD)
-        if ($zScore <= 3) return 'gemuk';           // Overweight (+2 to +3 SD)
-        return 'obesitas';                          // Obese (> +3 SD)
+        
+        // Hitung TB/U z-score
+        $tbuScore = ($tinggiBadan - $medianHeight) / $sd;
+        
+        // Tentukan status berdasarkan TB/U < -2 SD
+        if ($tbuScore < -2) {
+            return 'stunting';      // Tinggi badan pendek menurut umur
+        }
+        
+        return 'normal';            // Pertumbuhan normal
     }
 
     public function getStatusGiziColorAttribute(): string
     {
         return match($this->status_gizi) {
-            'normal' => 'success',
-            'kurus' => 'warning',
-            'gizi_buruk' => 'danger',
-            'gemuk' => 'info',
-            'obesitas' => 'primary',
+            'normal' => 'success',    // Green - Normal (TB/U >= -2 SD)
+            'stunting' => 'danger',   // Red - Stunting (TB/U < -2 SD)
             default => 'gray',
         };
     }

@@ -8,6 +8,7 @@ use App\Models\Imunisasi;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\StatusGiziHelper;
 
 class StatsOverview extends BaseWidget
 {
@@ -19,7 +20,7 @@ class StatsOverview extends BaseWidget
         // Total Kegiatan (sudah dilaksanakan)
         $totalKegiatan = Kegiatan::where('status', 'selesai')->count();
         
-        // Gejala Stunting - anak dengan gizi buruk atau kurus (WHO categories)
+        // Gejala Stunting - anak dengan status_gizi 'stunting' (standar TB/U < -2 SD)
         $gejalaStunting = DB::table('pengukurans')
             ->select('balita_id')
             ->whereIn('id', function ($query) {
@@ -27,11 +28,11 @@ class StatsOverview extends BaseWidget
                     ->from('pengukurans')
                     ->groupBy('balita_id');
             })
-            ->whereIn('status_gizi', ['gizi_buruk', 'kurus'])
+            ->where('status_gizi', 'stunting')
             ->distinct()
             ->count('balita_id');
         
-        // Anak Normal - anak dengan status gizi normal (WHO category)
+        // Anak Normal - anak dengan status_gizi 'normal' (standar TB/U >= -2 SD)
         $anakNormal = DB::table('pengukurans')
             ->select('balita_id')
             ->whereIn('id', function ($query) {
@@ -59,14 +60,14 @@ class StatsOverview extends BaseWidget
                 ->extraAttributes(['class' => 'stat-warning']),
             
             Stat::make('Gejala Stunting', $gejalaStunting)
-                ->description('Data anak dengan resiko stunting')
+                ->description('Anak dengan TB/U < -2 SD (kekurangan gizi kronis)')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color('danger')
                 ->chartColor('#e74c3c')
                 ->extraAttributes(['class' => 'stat-danger']),
             
             Stat::make('Anak Normal', $anakNormal)
-                ->description('Anak dengan pertumbuhan normal')
+                ->description('Anak dengan TB/U ≥ -2 SD (pertumbuhan normal)')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success')
                 ->chartColor('#27ae60')

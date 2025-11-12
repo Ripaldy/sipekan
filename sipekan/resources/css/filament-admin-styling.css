@@ -1,0 +1,301 @@
+/* ============================================
+   FILAMENT ADMIN STYLING - Match Admin UI
+   Green theme with professional styling
+   ============================================ */
+
+:root {
+    /* Main Colors */
+    --color-primary: #27ae60;
+    --color-success: #27ae60;
+    --color-warning: #f39c12;
+    --color-danger: #e74c3c;
+    --color-info: #3498db;
+
+    /* Neutrals */
+    --color-gray-50: #f9fafb;
+    --color-gray-100: #f3f4f6;
+    --color-gray-200: #e5e7eb;
+    --color-gray-300: #d1d5db;
+    --color-gray-500: #6b7280;
+    --color-gray-700: #374151;
+    --color-gray-900: #111827;
+}
+
+/* Header Styling */
+.fi-topbar {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fi-brand {
+    color: var(--color-primary);
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Navigation */
+.fi-sidebar-nav-item.fi-active {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--color-primary);
+}
+
+.fi-sidebar-nav-item:hover {
+    background-color: rgba(39, 174, 96, 0.05);
+}
+
+/* Tables */
+.fi-table {
+    background-color: white;
+}
+
+.fi-table-head-th {
+    background-color: #f3f4f6;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: 600;
+    color: var(--color-gray-700);
+    padding: 12px 16px;
+}
+
+.fi-table-body-cell {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 16px;
+}
+
+.fi-table-body-row:hover {
+    background-color: #fafafa;
+}
+
+/* Badges/Status */
+.fi-badge {
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.fi-badge.fi-color-success {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--color-success);
+}
+
+.fi-badge.fi-color-warning {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--color-warning);
+}
+
+.fi-badge.fi-color-danger {
+    background-color: rgba(231, 76, 60, 0.1);
+    color: var(--color-danger);
+}
+
+.fi-badge.fi-color-info {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--color-info);
+}
+
+.fi-badge.fi-color-primary {
+    background-color: rgba(39, 174, 96, 0.1);
+    color: var(--color-primary);
+}
+
+/* Buttons */
+.fi-btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.fi-btn-primary:hover {
+    background-color: #229954;
+    box-shadow: 0 4px 6px rgba(39, 174, 96, 0.3);
+}
+
+.fi-btn-secondary {
+    background-color: transparent;
+    border: 1px solid #e5e7eb;
+    color: var(--color-gray-700);
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.fi-btn-secondary:hover {
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+}
+
+/* Actions */
+.fi-link-action {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.fi-link-action:hover {
+    color: #229954;
+    text-decoration: underline;
+}
+
+/* Cards & Containers */
+.fi-card {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fi-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Filters */
+.fi-form-field {
+    background-color: white;
+}
+
+.fi-input {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.fi-input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+    outline: none;
+}
+
+/* Select */
+.fi-select {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+/* Page Header */
+.fi-page-heading {
+    color: var(--color-gray-900);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+/* Modal/Dialog */
+.fi-modal-header {
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px;
+}
+
+.fi-modal-title {
+    color: var(--color-gray-900);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* Form Fields */
+.fi-fieldset {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.fi-fieldset-legend {
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Toolbar */
+.fi-toolbar {
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 16px;
+    border-radius: 6px 6px 0 0;
+}
+
+/* Empty State */
+.fi-empty-state-description {
+    color: var(--color-gray-500);
+}
+
+/* Status Messages */
+.fi-alert.fi-alert-success {
+    background-color: rgba(39, 174, 96, 0.1);
+    border-left: 4px solid var(--color-success);
+    color: var(--color-success);
+}
+
+.fi-alert.fi-alert-warning {
+    background-color: rgba(243, 156, 18, 0.1);
+    border-left: 4px solid var(--color-warning);
+    color: var(--color-warning);
+}
+
+.fi-alert.fi-alert-danger {
+    background-color: rgba(231, 76, 60, 0.1);
+    border-left: 4px solid var(--color-danger);
+    color: var(--color-danger);
+}
+
+.fi-alert.fi-alert-info {
+    background-color: rgba(52, 152, 219, 0.1);
+    border-left: 4px solid var(--color-info);
+    color: var(--color-info);
+}
+
+/* Loading State */
+.fi-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .fi-page-heading {
+        font-size: 24px;
+    }
+
+    .fi-table {
+        font-size: 12px;
+    }
+
+    .fi-table-head-th,
+    .fi-table-body-cell {
+        padding: 8px;
+    }
+}
+
+/* Specific Table Styling */
+.fi-table-row-expand-trigger {
+    cursor: pointer;
+    color: var(--color-primary);
+}
+
+.fi-table-row-expand-trigger:hover {
+    color: #229954;
+}
+
+/* Description text styling */
+.fi-col-description {
+    color: var(--color-gray-500);
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* Section divider */
+.fi-fieldset-section {
+    margin-bottom: 24px;
+}
+
+.fi-fieldset-section:last-child {
+    margin-bottom: 0;
+}

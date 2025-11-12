@@ -40,7 +40,7 @@ class PublicBalitaController extends Controller
             'data' => [
                 'kode_anak' => $balita->id_balita,
                 'nama_lengkap' => $balita->nama,
-                'tanggal_lahir' => $balita->tanggal_lahir->format('Y-m-d'),
+                'tanggal_lahir' => $balita->tanggal_lahir ? $balita->tanggal_lahir?->format('Y-m-d') : null,
                 'jenis_kelamin' => $balita->jenis_kelamin,
                 'usia_bulan' => $balita->umur_sekarang,
                 'nama_orang_tua' => $balita->nama_orang_tua,
@@ -66,21 +66,21 @@ class PublicBalitaController extends Controller
     public function getStatistics()
     {
         $totalBalita = Balita::count();
-        $balitaSehat = Balita::whereHas('pengukurans', function($query) {
-            $query->where('status_gizi', 'Normal')
+        $balitaNormal = Balita::whereHas('pengukurans', function($query) {
+            $query->where('status_gizi', 'normal')
                   ->whereRaw('tanggal_ukur = (SELECT MAX(tanggal_ukur) FROM pengukurans WHERE balita_id = balitas.id)');
         })->count();
 
-        $persentaseSehat = $totalBalita > 0 
-            ? round(($balitaSehat / $totalBalita) * 100) 
+        $persentaseNormal = $totalBalita > 0 
+            ? round(($balitaNormal / $totalBalita) * 100) 
             : 0;
 
         return response()->json([
             'success' => true,
             'data' => [
                 'total_balita' => $totalBalita,
-                'balita_sehat' => $balitaSehat,
-                'persentase_sehat' => $persentaseSehat,
+                'balita_normal' => $balitaNormal,
+                'persentase_normal' => $persentaseNormal,
                 'siap_melayani' => true
             ]
         ]);
